@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Session Generator</title>
+    <!-- Include the QRCode.js library -->
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+</head>
+<body>
+
+    <h1>QR Code Session Generator</h1>
+    
+    <!-- Input field for WhatsApp Number -->
+    <label for="whatsappNumber">Please Enter your WhatsApp Number (starting with 2347032):</label>
+    <input type="text" id="whatsappNumber" placeholder="2347032xxxxx">
+    
+    <br><br>
+    
+    <!-- Button to generate session ID and QR code -->
+    <button onclick="generateSession()">Generate QR Code</button>
+    
+    <h3>Generated QR Code:</h3>
+    <!-- Where the QR code will be displayed -->
+    <div id="qrcode"></div>
+
+    <script>
+        // Function to generate a random session ID
+        function generateSessionId(length = 16) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let sessionId = '';
+            for (let i = 0; i < length; i++) {
+                const randomIndex = Math.floor(Math.random() * chars.length);
+                sessionId += chars[randomIndex];
+            }
+            return sessionId;
+        }
+
+        // Function to generate a random WhatsApp number
+        function generateWhatsAppNumber() {
+            const prefix = '2347032';  // Fixed prefix
+            const randomSuffix = Math.floor(Math.random() * 1000000); // Generate random 6-digit number
+            const fullNumber = prefix + randomSuffix.toString().padStart(6, '0'); // Pad with leading zeros if needed
+            return fullNumber;
+        }
+
+        // Function to generate session and QR code
+        function generateSession() {
+            const whatsappNumber = document.getElementById('whatsappNumber').value;
+            
+            // If the WhatsApp number field is empty, generate a random number
+            const numberToUse = whatsappNumber || generateWhatsAppNumber();
+            
+            // Generate a random session ID
+            const sessionId = generateSessionId();
+            
+            // Prepare the data for the QR code
+            const data = `Session ID: ${sessionId}\nWhatsApp Number: ${numberToUse}`;
+            
+            // Clear any previous QR code
+            document.getElementById('qrcode').innerHTML = '';
+            
+            // Generate and display the QR code
+            const qrcode = new QRCode(document.getElementById('qrcode'), {
+                text: data,
+                width: 128,
+                height: 128
+            });
+
+            // Log the session ID and WhatsApp number for debugging
+            console.log('Session ID:', sessionId);
+            console.log('WhatsApp Number:', numberToUse);
+        }
+    </script>
+</body>
+</html>
